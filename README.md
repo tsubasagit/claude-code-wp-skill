@@ -6,21 +6,7 @@ A Claude Code skill template for managing WordPress via SSH + WP-CLI.
 
 ## Architecture / アーキテクチャ
 
-```
-┌─────────────────┐      SSH       ┌──────────────────────┐
-│  Claude Code     │ ──────────────▶│  WordPress Server    │
-│  (local)         │                │                      │
-│  ┌─────────┐    │   SCP (files)  │  ┌──────────┐       │
-│  │ SKILL.md│────│───────────────▶│  │  WP-CLI  │       │
-│  └─────────┘    │                │  └────┬─────┘       │
-│                  │                │       │              │
-│  /wp <command>   │                │       ▼              │
-│                  │                │  ┌──────────┐       │
-└─────────────────┘                │  │WordPress │       │
-                                    │  │  DB      │       │
-                                    │  └──────────┘       │
-                                    └──────────────────────┘
-```
+![Architecture](docs/images/architecture.jpg)
 
 ## Commands / コマンド一覧
 
@@ -42,6 +28,8 @@ A Claude Code skill template for managing WordPress via SSH + WP-CLI.
 - サーバーに [WP-CLI](https://wp-cli.org/) がインストール済み
 
 ## Installation / インストール
+
+![Setup Flow](docs/images/setup-flow.jpg)
 
 ### Quick Install / クイックインストール
 
@@ -79,6 +67,8 @@ ssh <YOUR_SSH_HOST> "wp --path=<YOUR_WP_PATH> term list category --fields=term_i
 
 ## Usage / 使い方
 
+![Commands Cheatsheet](docs/images/commands-cheatsheet.png)
+
 Claude Code のチャットで以下のように入力します:
 
 ```
@@ -93,6 +83,8 @@ Claude Code のチャットで以下のように入力します:
 ```
 
 ## Security / セキュリティ
+
+![Security Notice](docs/images/security-notice.jpg)
 
 ### Configured SKILL.md / 設定済み SKILL.md の取り扱い
 
