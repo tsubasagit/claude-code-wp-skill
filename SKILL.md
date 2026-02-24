@@ -1,7 +1,7 @@
 ---
 name: wp
 description: "WordPress の記事投稿・編集・固定ページ操作スキル。SSH + WP-CLI で操作する。"
-argument-hint: "[new|edit ID|list|pages|page edit ID|tags|publish ID]"
+argument-hint: "[new|edit ID|list|pages|page edit ID|tags|publish ID|media FILE]"
 disable-model-invocation: false
 ---
 
@@ -16,14 +16,15 @@ disable-model-invocation: false
 
 ### カテゴリ ID
 
+> **注意**: 以下はサンプル値です。必ず自分のサイトのカテゴリ ID に書き換えてください。
+
 | カテゴリ名 | ID |
 |---|---|
-| Blog | 1 |
-| News | 2 |
-| Tips | 3 |
+| *Blog* | *1* |
+| *News* | *2* |
+| *Tips* | *3* |
 
-> カテゴリ ID は自分のサイトに合わせて書き換えてください。
-> `ssh <YOUR_SSH_HOST> "wp --path=<YOUR_WP_PATH> term list category --fields=term_id,name --format=table"` で確認できます。
+> `ssh <YOUR_SSH_HOST> "wp --path=<YOUR_WP_PATH> term list category --fields=term_id,name --format=table"` で実際の値を確認できます。
 
 ### SSH コマンドの基本形
 
@@ -64,7 +65,7 @@ ssh <YOUR_SSH_HOST> "wp --path=<YOUR_WP_PATH> term list post_tag --fields=term_i
 ### `pages` — 固定ページ一覧
 
 ```bash
-ssh <YOUR_SSH_HOST> "wp --path=<YOUR_WP_PATH> post list --post_type=page --fields=ID,post_title,post_status --format=table"
+ssh <YOUR_SSH_HOST> "wp --path=<YOUR_WP_PATH> post list --post_type=page --post_status=draft,publish --fields=ID,post_title,post_status --format=table"
 ```
 
 ---
@@ -125,6 +126,34 @@ ssh <YOUR_SSH_HOST> "wp --path=<YOUR_WP_PATH> post list --post_type=page --field
 ### `page edit ID` — 固定ページ編集
 
 手順は `edit` と同じ。`wp post get` / `wp post update` は固定ページにも使える（post_type に依存しない）。
+
+---
+
+### `media FILE` — 画像アップロード
+
+手順:
+
+1. ローカルの画像ファイルを SCP でサーバーに転送:
+   ```bash
+   scp <LOCAL_FILE> <YOUR_SSH_HOST>:/tmp/wp-claude-media-<filename>
+   ```
+2. `wp media import` でメディアライブラリに登録:
+   ```bash
+   ssh <YOUR_SSH_HOST> "wp --path=<YOUR_WP_PATH> media import /tmp/wp-claude-media-<filename> --porcelain"
+   ```
+   `--porcelain` でアタッチメント ID のみ返る。
+3. サーバーの一時ファイルを削除:
+   ```bash
+   ssh <YOUR_SSH_HOST> "rm /tmp/wp-claude-media-<filename>"
+   ```
+4. アップロードした画像の URL を取得:
+   ```bash
+   ssh <YOUR_SSH_HOST> "wp --path=<YOUR_WP_PATH> post get <ATTACHMENT_ID> --field=guid"
+   ```
+5. 結果をユーザーに報告:
+   - アタッチメント ID
+   - 画像 URL
+   - 投稿に挿入する場合は `<!-- wp:image {"id":<ATTACHMENT_ID>} --><figure class="wp-block-image"><img src="<URL>" alt="" class="wp-image-<ATTACHMENT_ID>"/></figure><!-- /wp:image -->` の形式を案内
 
 ---
 

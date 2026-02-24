@@ -1,0 +1,15 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ローカルで設定済みの SKILL.md を誤コミットしないよう注意
+# （テンプレートリポジトリとして公開するため、プレースホルダー状態を維持すること）
+# SKILL.md   ← 必要に応じてコメント解除
